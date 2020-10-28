@@ -1,0 +1,59 @@
+############################# INITIATION ####################################
+
+# Include all the variables.
+include "soundINFO.pcl";
+
+# Include all the subroutines.
+include "soundSUBS.pcl";
+
+# Loop until the clock is no longer negative.
+# Negative clocktimes at the beginning are no real problem, but they fog up your logfile.
+loop until clock.time() >= 0 begin end; 
+
+# make sure a Output is connected
+if (output_port_manager.port_count() < 1) then
+   text1.set_caption( "No output port selected!" );
+   text1.redraw();
+   Ptext.present();
+   loop until false begin end 
+end;
+
+#output_port oport = output_port_manager.get_port( 1 ); #defined im soundINFO.pcl
+
+/*if (input_port_manager.port_count() < 1) then				# make sure a buttonbox is connected(optioneel)
+   t_info1.set_caption( "No compoort selected!" );
+   t_info1.redraw();
+   p_info.present();
+   loop until false begin end 
+end;
+input_port serial = input_port_manager.get_port( 1 );
+*/
+
+
+subjectname = "sound";
+Get_subj_info("Give test nr (01..99): ");
+subjectname = subjectname + S3;
+outputfilename = "sound_" + subnr + "-out.txt";
+
+
+#block_size_practice = 15;
+block_size = 2;
+block = 1;
+#----------------My own subs--------------#
+
+# Run first block of trials
+loop until block >= block_size begin 
+	p_instructie1.present();
+	WaitForButtonpress(1);
+	show_text( "Test in progress", "Press P tot pause, R to resume, Q to quit." );
+	RunTrials();
+   WriteOutput(outputfilename);  								# Write data to output file
+	block = block + 1;
+	#WaitForButtonpress( 1 );
+end;                     
+  
+###########
+# END		 #
+########### 
+    
+EndFB();

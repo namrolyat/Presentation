@@ -1,0 +1,68 @@
+
+# -------------------------- BUTTON CODES -----------------------------
+
+int button_enter = 1;
+int button_middle = 2;
+
+# -------------------------- LOGFILE -----------------------------
+output_port oport = output_port_manager.get_port( 1 );
+
+# To initiate the logfile PCL get the standard file location and name from Directories & Logfiles tabs
+string path = logfile_directory;
+string subjectname = logfile.subject();
+
+# To type your own path a few temporarily variables had to be created...
+string input;
+string tempstr;
+string tempstr2;
+string substr1;
+string substr2;
+string filepath;
+string tempfilepath;
+string outputfilename;
+output_file ofile1 = new output_file;
+string templog = "\n\n\n##################### A New Start #####################\n";
+
+
+# -------------------------- VARIABLES INITIATION -----------------------------
+
+string S3;
+string temp;
+string subnr;
+string runnr;
+string antwoord;
+string list; 
+
+int i;
+int j;
+int count_old;
+int time_sample;
+int trial_nr;
+int Main_trial_nr;
+int time_end;
+
+int block_size;
+int block_size_practice;
+int block;
+int block_trial_size = 20;
+
+array <int> Fixation[504];
+array <int> prime_time[504];
+array <int> sound_time[504];
+array <int> Response_Center[504];
+array <int> waitshuffletime[504];
+array <int> soundside[504];
+array <int> Response_Value[block_trial_size];
+
+#---------------------------- Input File variables Initiation ----------------------------
+array <string> word1[40];
+array <string> word2[40];
+array <int> number[20];
+
+#---------------------------- Experiment Variables Initiation -----------------------------
+
+bool early = false;
+
+array <int> wait_times[3] = { 41, 191, 491 };
+
+# -------------------------- THE END -----------------------------

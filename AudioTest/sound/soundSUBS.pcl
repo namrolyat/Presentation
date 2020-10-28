@@ -1,0 +1,221 @@
+######################## CONDITION INFO SUBS ##############################
+
+#--------------------------Get Subj Info: -------------------------------------
+sub Get_subj_info(string inpstr) begin
+     
+   system_keyboard.set_max_length(1);
+   S3 = "";
+   t_info1.set_caption(inpstr);  
+   t_info1.redraw();  
+   p_info.present();
+   loop
+      count_old = response_manager.total_response_count(button_enter)
+   until
+      response_manager.total_response_count(button_enter) > count_old
+  begin
+      input = system_keyboard.get_input();
+      inpstr = inpstr + input;
+      t_info1.set_caption(inpstr);
+      t_info1.redraw();  
+      p_info.present();
+      S3 = S3 + input;
+   end;
+   subnr = S3;
+end;
+
+
+#-----------------------------Get_stimulus_file------------------------------------
+sub Get_stimulus_file(string str ) begin              
+   input_file inputfile = new input_file;
+   inputfile.open( str );    
+
+  inputfile.close();
+  inputfile.open( str );
+  inputfile.set_delimiter( '\t' ); # for get_line()
+  int count = 0;
+
+  loop until
+    inputfile.end_of_file() || count == 500 || !inputfile.last_succeeded()
+  begin
+    count = count + 1;
+    word1[count] 	= inputfile.get_line();
+    word2[count] = inputfile.get_string();
+    number[count] = inputfile.get_int();
+  end;  
+
+  if !inputfile.last_succeeded() then
+    term.print( "Error while reading!\n" )
+  elseif !inputfile.end_of_file() then
+    term.print( "Exceeded capacity!\n" )
+  end;   
+  inputfile.close();
+   
+end;   
+
+
+#------------------------------- Show Text ---------------------------
+sub show_text( string message1, string message2 )
+begin
+   text1.set_caption( message1 );
+   text1.redraw();
+   if (message2 != "") then
+		text2.set_caption( message2 );
+		text2.redraw();
+	end;
+   Ptext.present();
+end;
+
+#-----------------------------TempPrint------------------------------------
+sub TempPrint(string str)     
+begin              
+   templog = templog + str;   
+end;               
+
+
+
+#-----------------------------Wait------------------------------------
+sub Wait(int dur_wait) begin
+   int time_wait = clock.time();
+   loop until clock.time() >= time_wait + dur_wait
+   begin end;
+end;
+
+
+#-----------------------------WaitTest------------------------------------
+
+sub WaitTest begin
+   Wait(1000);
+   default.present();
+      int time_start = clock.time();
+      TempPrint(string(time_start));
+end;
+
+#-----------------------------Countdown------------------------------------
+sub Countdown(int counting) begin
+   loop
+     i = 1 
+   until i > counting
+   begin 
+     #text13.set_caption( string(counting) );
+     #text13.redraw();
+     #trial1.present();
+     counting = counting - 1;
+     Wait(1000);
+   end;
+end;
+
+#-----------------------------WaitSubjectReady------------------------------------
+sub WaitForButtonpress( int button ) begin
+    
+   loop count_old = response_manager.total_response_count(button)
+   until response_manager.total_response_count(button) > count_old
+   begin end;
+   
+end;
+
+############################ LOGFILE #######################   
+#-----------------------------CreateOutput------------------------------------
+sub CreateOutput(string str ) begin
+
+	templog = "";
+ 
+	templog.append("Trial_nr");   
+	templog.append("\t");
+	templog.append("picture");   
+	templog.append("\t");
+	templog.append("Response");   
+	templog.append("\t");
+	templog.append("Response_Time");   
+	templog.append("\t");
+	templog.append("Feedback");   
+	templog.append("\t");
+	templog.append("Fase");   
+	templog.append("\t");
+	templog.append("Pause_Times");   
+	templog.append("\n");   
+
+   ofile1 = new output_file;
+   ofile1.open( str, false ); # don't overwrite
+   #Create header of output file
+   ofile1.print( templog );
+	templog = "";
+   ofile1.close();
+
+end; 
+
+#-----------------------------WriteOutput-------------------
+
+sub WriteOutput(string str ) begin
+
+   loop j = 1
+   until j > (block_trial_size)
+   begin
+		templog.append(string(((block -1)  * block_trial_size) + j));   #write variable followed by a tab
+		templog.append("\t");
+		templog.append(subnr);   
+		templog.append("\t");
+		templog.append(string(Fixation[j]));   
+		templog.append("\t");
+		templog.append(string(Response_Value[j]));   
+		templog.append("\n");   #next line
+ 		j = j + 1;
+   end;  
+
+   ofile1.open_append ( str ); # append
+   ofile1.print( templog );
+	templog = "";
+   ofile1.close();
+  
+        
+end;
+
+#-----------------------------RunTrials---------------een voor een presenteren--------------------
+sub RunTrials begin
+	oport.send_code( 0 );
+	oport.send_code( 2 );
+	oport.send_code( 255 );
+	
+   int loopnumber = 100000;
+	loop i = 1
+   until i > loopnumber
+   begin
+	/*	
+		loop int count_old = response_manager.total_response_count()
+		until response_manager.total_response_count() > count_old
+		begin end;
+  */
+		
+		sound2.present();
+		oport.send_code( 255 );
+		oport.send_code( 0 );
+		oport.send_code( 0 );
+		#sound2.present();
+		/*if mod(i, 2) == 0 then
+        oport.send_code( 255 );
+      else
+	     oport.send_code( 0 );
+	     oport.send_code( 0 );
+	   end;*/
+		#Wait(5);
+		i = i +1;
+		
+  end;
+end;
+
+###################################################                                                       
+ 
+
+
+#-----------------------------EndFB-------------------
+
+sub EndFB begin
+	p_end.present();
+	loop
+		count_old = response_manager.total_response_count(button_enter)
+	until
+		response_manager.total_response_count(button_enter) > count_old
+	begin
+	end;
+ 
+                          
+end;  

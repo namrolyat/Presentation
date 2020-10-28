@@ -1,0 +1,46 @@
+############################# INITIATION ####################################
+# Include all the variables.
+include "monitor_flashINFO.pcl";
+include "monitor_flashSUBS.pcl";									# Include all the subroutines.
+
+# make sure an Output is connected
+if (output_port_manager.port_count() < 1) then
+   show_text(  "No output port selected!" );
+   loop until false begin end 
+end;
+
+if (input_port_manager.port_count() < 1) then				# make sure a buttonbox is connected(optioneel)
+   t_info1.set_caption( "No compoort selected!" );
+   t_info1.redraw();
+   p_info.present();
+   loop until false begin end 
+end;
+#input_port serial = input_port_manager.get_port( 1 );
+
+
+loop until clock.time() >= 0 begin end; 						# Loop until the clock is no longer negative.
+
+subjectname = "Template";
+Get_subj_info("Give test nr (01..99): ");
+subjectname = subjectname + S3;
+outputfilename = "Template_Ppn" + subnr + "-out.txt";
+
+#string stimfilename = "Templatestim.txt";					# read in stimuli using our own import routine
+#Get_stimulus_file(stimfilename);
+
+#CreateOutput(outputfilename);	                       	# Write header things of logfile
+default.present();
+#GiveInstr();                                        		# Instructions
+
+##########################start experiment###############################
+	 
+loop until block >= 4 begin 
+	runtrials(); 														# Run first block of trials
+	WriteOutput(outputfilename);  								# Write data to output file
+	block = block + 1;
+end;
+
+    
+EndFB();
+
+################################### END ###################################

@@ -1,0 +1,9 @@
+Scenario - sound
+Logfile written - 01/02/2017 16:30:59
+
+Trial	Event Type	Code	Time	TTime	Uncertainty	Duration	Uncertainty	ReqTime	ReqDur	Stim Type	Pair Index
+
+0	Text Input		6705	6705	0
+0	Response	1	6705	6705	0
+0	Response	1	11184	11184	0
+0	Quit		39266	39266	NA

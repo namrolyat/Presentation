@@ -1,0 +1,8 @@
+This test displays a black and a white screen in turns while a trigger signal is given on every turn at LPT1. 
+The frequency can be changed by editing the dur_wait variable in the INFO file.
+
+Presing the "P" key will pause the fikkering while "R" will resume it. "Q" is for quit.
+The scenario uses the enter key as response button and LPT1 as the output port.
+
+This script is changed to count the pulses it generates while sending the same amount of screen refreshes.
+By comparing the two numbers we can tell something about the missed frames
